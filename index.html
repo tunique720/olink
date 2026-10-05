@@ -3,12 +3,16 @@
 <meta name="viewport" content="width=device-width,initial-scale=1">
 <title>Opening Obsidian…</title></head>
 <body style="font-family:sans-serif;padding:2em">
-<p>Opening Obsidian…</p>
+<p>Opening Obsidian… you can close this tab.</p>
 <p><a id="go" style="font-size:1.3em">Open in Obsidian</a></p>
 <script>
 var p = new URLSearchParams(location.hash.slice(1));
 var vault = p.get('vault') || 'Obsidian', file = p.get('file') || '';
 var u = 'obsidian://open?vault=' + encodeURIComponent(vault) + (file ? '&file=' + encodeURIComponent(file) : '');
 document.getElementById('go').href = u;
+var done = false;
+function bye() { if (done) return; done = true; setTimeout(function () { window.close(); }, 300); }
+window.addEventListener('blur', bye);
+document.addEventListener('visibilitychange', function () { if (document.hidden) bye(); });
 location.replace(u);
 </script></body></html>
