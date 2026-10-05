@@ -1,0 +1,14 @@
+<!doctype html>
+<html><head><meta charset="utf-8"><meta name="robots" content="noindex">
+<meta name="viewport" content="width=device-width,initial-scale=1">
+<title>Opening Obsidian…</title></head>
+<body style="font-family:sans-serif;padding:2em">
+<p>Opening Obsidian…</p>
+<p><a id="go" style="font-size:1.3em">Open in Obsidian</a></p>
+<script>
+var p = new URLSearchParams(location.hash.slice(1));
+var vault = p.get('vault') || 'Obsidian', file = p.get('file') || '';
+var u = 'obsidian://open?vault=' + encodeURIComponent(vault) + (file ? '&file=' + encodeURIComponent(file) : '');
+document.getElementById('go').href = u;
+location.replace(u);
+</script></body></html>
