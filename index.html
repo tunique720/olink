@@ -7,6 +7,7 @@
 <p id="hint" style="display:none">First time on this browser: tick <b>Always allow</b> in the prompt. From the next link on, this tab will close by itself.</p>
 <p><a id="go" style="font-size:1.3em">Open in Obsidian</a></p>
 <script>
+window.addEventListener("hashchange", function () { location.reload(); });
 var KEY = 'olink-ok', p = new URLSearchParams(location.hash.slice(1));
 if (p.has('reset')) {
   try { localStorage.removeItem(KEY); } catch (e) {}
