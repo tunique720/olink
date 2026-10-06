@@ -3,21 +3,26 @@
 <meta name="viewport" content="width=device-width,initial-scale=1">
 <title>Opening Obsidian…</title></head>
 <body style="font-family:sans-serif;padding:2em">
-<p>Opening Obsidian…</p>
-<p id="hint" style="display:none">First time on this browser: tick <b>Always allow</b> in the prompt, then click below.</p>
+<p id="msg">Opening Obsidian…</p>
+<p id="hint" style="display:none">First time on this browser: tick <b>Always allow</b> in the prompt. From the next link on, this tab will close by itself.</p>
 <p><a id="go" style="font-size:1.3em">Open in Obsidian</a></p>
 <script>
-var p = new URLSearchParams(location.hash.slice(1));
-var vault = p.get('vault') || 'Obsidian', file = p.get('file') || '';
-var u = 'obsidian://open?vault=' + encodeURIComponent(vault) + (file ? '&file=' + encodeURIComponent(file) : '');
-var go = document.getElementById('go'); go.href = u;
-var ok = false; try { ok = localStorage.getItem('olink-ok') === '1'; } catch (e) {}
-go.addEventListener('click', function () { try { localStorage.setItem('olink-ok', '1'); } catch (e) {} });
-if (ok) {
-  var done = false;
-  var bye = function () { if (done) return; done = true; setTimeout(function () { window.close(); }, 300); };
-  window.addEventListener('blur', bye);
-  document.addEventListener('visibilitychange', function () { if (document.hidden) bye(); });
-} else { document.getElementById('hint').style.display = 'block'; }
-location.replace(u);
+var KEY = 'olink-ok', p = new URLSearchParams(location.hash.slice(1));
+if (p.has('reset')) {
+  try { localStorage.removeItem(KEY); } catch (e) {}
+  document.getElementById('msg').textContent = 'Reset done. The next link will keep its tab open once.';
+} else {
+  var vault = p.get('vault') || 'Obsidian', file = p.get('file') || '';
+  var u = 'obsidian://open?vault=' + encodeURIComponent(vault) + (file ? '&file=' + encodeURIComponent(file) : '');
+  document.getElementById('go').href = u;
+  var seen = false;
+  try { seen = localStorage.getItem(KEY) === '1'; localStorage.setItem(KEY, '1'); } catch (e) {}
+  if (seen) {
+    var done = false;
+    var bye = function () { if (done) return; done = true; setTimeout(function () { window.close(); }, 300); };
+    window.addEventListener('blur', bye);
+    document.addEventListener('visibilitychange', function () { if (document.hidden) bye(); });
+  } else { document.getElementById('hint').style.display = 'block'; }
+  location.replace(u);
+}
 </script></body></html>
